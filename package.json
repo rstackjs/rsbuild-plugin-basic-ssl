@@ -1,6 +1,6 @@
 {
 	"name": "@rsbuild/plugin-basic-ssl",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"repository": "https://github.com/rstackjs/rsbuild-plugin-basic-ssl",
 	"license": "MIT",
 	"type": "module",
