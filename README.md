@@ -23,7 +23,7 @@ Add plugin to your `rsbuild.config.ts`:
 
 ```ts
 // rsbuild.config.ts
-import { pluginBasicSsl } from "@rsbuild/plugin-basic-ssl";
+import { pluginBasicSsl } from '@rsbuild/plugin-basic-ssl';
 
 export default {
   plugins: [pluginBasicSsl()],
@@ -44,7 +44,7 @@ Filename of the generated certificate.
 
 ```ts
 pluginBasicSsl({
-  filename: "foo.pem",
+  filename: 'foo.pem',
 });
 ```
 
@@ -57,10 +57,10 @@ Output path of the generated certificate.
 - **Example:**
 
 ```ts
-import path from "node:path";
+import path from 'node:path';
 
 pluginBasicSsl({
-  outputPath: path.join(__dirname, "node_modules/.cache/cert"),
+  outputPath: path.join(__dirname, 'node_modules/.cache/cert'),
 });
 ```
 
@@ -72,14 +72,14 @@ Attributes passing to `selfsigned`, see [selfsigned](https://github.com/jfromani
 - **Default:**
 
 ```ts
-const defaultAttrs = [{ name: "commonName", value: "localhost" }];
+const defaultAttrs = [{ name: 'commonName', value: 'localhost' }];
 ```
 
 - **Example:**
 
 ```ts
 pluginBasicSsl({
-  selfsignedAttrs: [{ name: "commonName", value: "example.com" }],
+  selfsignedAttrs: [{ name: 'commonName', value: 'example.com' }],
 });
 ```
 
