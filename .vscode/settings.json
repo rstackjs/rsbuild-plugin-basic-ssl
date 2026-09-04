@@ -1,4 +1,5 @@
 {
   "search.useIgnoreFiles": true,
-  "cSpell.words": ["rslint"]
+  "cSpell.words": ["rslint"],
+  "editor.defaultFormatter": "rstack.rstack"
 }
