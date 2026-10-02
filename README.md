@@ -87,7 +87,9 @@ pluginBasicSsl({
 
 Options passing to `selfsigned`, see [selfsigned - Options](https://github.com/jfromaniello/selfsigned?tab=readme-ov-file#options) for details.
 
-- **Type:** `SelfsignedOptions`
+In addition, the plugin supports a `days` option to set the validity period of the certificate. It is converted to `notAfterDate` and ignored if `notAfterDate` is set.
+
+- **Type:** `SelfsignedOptions & { days?: number }`
 - **Default:**
 
 ```ts

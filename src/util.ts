@@ -1,3 +1,4 @@
+import { X509Certificate } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,6 +16,15 @@ async function ensureDir(dir: string) {
   } catch {
     await ensureDir(path.dirname(dir));
     await fs.promises.mkdir(dir);
+  }
+}
+
+function isCertValid(content: string) {
+  try {
+    const { validTo } = new X509Certificate(content);
+    return new Date(validTo).getTime() > Date.now();
+  } catch {
+    return false;
   }
 }
 
@@ -36,22 +46,20 @@ export const resolveHttpsConfig = async (
     options.filename ?? 'fake-cert.pem',
   );
 
+  const { days = 30, ...restOptions } = options.selfsignedOptions ?? {};
   const selfsignedOptions = {
-    days: 30,
     keySize: 2048,
-    ...options.selfsignedOptions,
+    notAfterDate: new Date(Date.now() + days * 24 * 60 * 60 * 1000),
+    ...restOptions,
   };
 
   if (fs.existsSync(certPath)) {
-    const stats = await fs.promises.stat(certPath);
-    const timeDiff = Date.now() - stats.mtimeMs;
-    const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+    const content = await fs.promises.readFile(certPath, {
+      encoding: 'utf-8',
+    });
 
-    // Default validity period is 30 days
-    if (daysDiff < selfsignedOptions.days) {
-      const content = await fs.promises.readFile(certPath, {
-        encoding: 'utf-8',
-      });
+    // Reuse the cached certificate until it expires
+    if (isCertValid(content)) {
       return {
         key: content,
         cert: content,
@@ -59,7 +67,7 @@ export const resolveHttpsConfig = async (
     }
   }
 
-  const pem = selfsigned.generate(
+  const pem = await selfsigned.generate(
     options.selfsignedAttrs ?? [{ name: 'commonName', value: 'localhost' }],
     selfsignedOptions,
   );
