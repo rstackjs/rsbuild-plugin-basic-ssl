@@ -87,14 +87,14 @@ pluginBasicSsl({
 
 Options passing to `selfsigned`, see [selfsigned - Options](https://github.com/jfromaniello/selfsigned?tab=readme-ov-file#options) for details.
 
-In addition, the plugin supports a `days` option to set the validity period of the certificate. It is converted to `notAfterDate` and ignored if `notAfterDate` is set.
+Use `notAfterDate` to set the certificate's expiration date. The legacy `days` option is no longer supported.
 
-- **Type:** `SelfsignedOptions & { days?: number }`
+- **Type:** `SelfsignedOptions`
 - **Default:**
 
 ```ts
 const defaultOptions = {
-  days: 30,
+  notAfterDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   keySize: 2048,
 };
 ```
@@ -104,7 +104,7 @@ const defaultOptions = {
 ```ts
 pluginBasicSsl({
   selfsignedOptions: {
-    days: 100,
+    notAfterDate: new Date(Date.now() + 100 * 24 * 60 * 60 * 1000),
   },
 });
 ```

@@ -46,11 +46,10 @@ export const resolveHttpsConfig = async (
     options.filename ?? 'fake-cert.pem',
   );
 
-  const { days = 30, ...restOptions } = options.selfsignedOptions ?? {};
   const selfsignedOptions = {
     keySize: 2048,
-    notAfterDate: new Date(Date.now() + days * 24 * 60 * 60 * 1000),
-    ...restOptions,
+    notAfterDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    ...options.selfsignedOptions,
   };
 
   if (fs.existsSync(certPath)) {
