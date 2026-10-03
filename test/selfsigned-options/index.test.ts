@@ -13,7 +13,7 @@ test('should print HTTPS server URLs when custom selfsigned options', async () =
       plugins: [
         pluginBasicSsl({
           selfsignedOptions: {
-            days: 1,
+            notAfterDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
           },
         }),
       ],

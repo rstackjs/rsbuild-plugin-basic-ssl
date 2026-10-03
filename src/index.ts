@@ -22,14 +22,7 @@ export type PluginBasicSslOptions = {
   /**
    * Options passing to `selfsigned`.
    */
-  selfsignedOptions?: SelfsignedOptions & {
-    /**
-     * Validity period of the certificate in days.
-     * Ignored if `notAfterDate` is set.
-     * @default 30
-     */
-    days?: number;
-  };
+  selfsignedOptions?: SelfsignedOptions;
 };
 
 export const pluginBasicSsl = (
