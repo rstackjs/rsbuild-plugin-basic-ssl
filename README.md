@@ -87,8 +87,6 @@ pluginBasicSsl({
 
 Options passing to `selfsigned`, see [selfsigned - Options](https://github.com/jfromaniello/selfsigned?tab=readme-ov-file#options) for details.
 
-Use `notAfterDate` to set the certificate's expiration date.
-
 - **Type:** `SelfsignedOptions`
 - **Default:**
 
