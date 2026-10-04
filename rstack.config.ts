@@ -3,7 +3,7 @@ import { define } from 'rstack';
 
 define.lib({
   format: 'esm',
-  syntax: 'es2021',
+  syntax: 'es2023',
   dts: true,
   output: {
     target: 'node',
