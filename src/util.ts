@@ -1,4 +1,4 @@
-import { X509Certificate } from 'node:crypto';
+import { X509Certificate, createPrivateKey } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,10 +19,16 @@ async function ensureDir(dir: string) {
   }
 }
 
-function isCertValid(content: string) {
+function isCertValid(content: string, passphrase?: string) {
   try {
-    const { validTo } = new X509Certificate(content);
-    return new Date(validTo).getTime() > Date.now();
+    const cert = new X509Certificate(content);
+    const privateKey = createPrivateKey({ key: content, passphrase });
+    const now = Date.now();
+    return (
+      new Date(cert.validFrom).getTime() <= now &&
+      new Date(cert.validTo).getTime() > now &&
+      cert.checkPrivateKey(privateKey)
+    );
   } catch {
     return false;
   }
@@ -57,8 +63,13 @@ export const resolveHttpsConfig = async (
       encoding: 'utf-8',
     });
 
-    // Reuse the cached certificate until it expires
-    if (isCertValid(content)) {
+    // Reuse only a currently valid certificate with a matching private key.
+    if (
+      isCertValid(
+        content,
+        config?.passphrase ?? options.selfsignedOptions?.passphrase,
+      )
+    ) {
       return {
         key: content,
         cert: content,
