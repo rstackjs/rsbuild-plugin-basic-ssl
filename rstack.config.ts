@@ -2,10 +2,9 @@
 import { define } from 'rstack';
 
 define.lib({
-  lib: [
-    { syntax: 'es2021', dts: true },
-    { format: 'cjs', syntax: 'es2021' },
-  ],
+  format: 'esm',
+  syntax: 'es2021',
+  dts: true,
   output: {
     target: 'node',
   },
