@@ -46,11 +46,39 @@ export const resolveHttpsConfig = async (
     options.filename ?? 'fake-cert.pem',
   );
 
+  const selfsignedAttrs = options.selfsignedAttrs ?? [
+    { name: 'commonName', value: 'localhost' },
+  ];
+  const commonName =
+    selfsignedAttrs.find(
+      (attr) => attr.name === 'commonName' || attr.shortName === 'CN',
+    )?.value ?? 'localhost';
   const selfsignedOptions = {
     keySize: 2048,
     notAfterDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     ...options.selfsignedOptions,
   };
+
+  if (commonName === 'localhost' && !selfsignedOptions.extensions?.length) {
+    selfsignedOptions.extensions = [
+      { name: 'basicConstraints', cA: false, critical: true },
+      {
+        name: 'keyUsage',
+        digitalSignature: true,
+        keyEncipherment: true,
+        critical: true,
+      },
+      { name: 'extKeyUsage', serverAuth: true, clientAuth: true },
+      {
+        name: 'subjectAltName',
+        altNames: [
+          { type: 2, value: 'localhost' },
+          { type: 7, ip: '127.0.0.1' },
+          { type: 7, ip: '::1' },
+        ],
+      },
+    ];
+  }
 
   if (fs.existsSync(certPath)) {
     const content = await fs.promises.readFile(certPath, {
@@ -66,10 +94,7 @@ export const resolveHttpsConfig = async (
     }
   }
 
-  const pem = await selfsigned.generate(
-    options.selfsignedAttrs ?? [{ name: 'commonName', value: 'localhost' }],
-    selfsignedOptions,
-  );
+  const pem = await selfsigned.generate(selfsignedAttrs, selfsignedOptions);
 
   const content = pem.private + pem.cert;
 
