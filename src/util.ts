@@ -3,7 +3,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { ServerConfig } from '@rsbuild/core';
-import selfsigned from 'selfsigned';
 import type { PluginBasicSslOptions } from './index.js';
 
 type HttpsConfig = ServerConfig['https'];
@@ -66,6 +65,7 @@ export const resolveHttpsConfig = async (
     }
   }
 
+  const { default: selfsigned } = await import('selfsigned');
   const pem = await selfsigned.generate(
     options.selfsignedAttrs ?? [{ name: 'commonName', value: 'localhost' }],
     selfsignedOptions,
