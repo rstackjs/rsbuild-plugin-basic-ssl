@@ -46,11 +46,8 @@ export const resolveHttpsConfig = async (
     options.filename ?? 'fake-cert.pem',
   );
 
-  const selfsignedAttrs = options.selfsignedAttrs ?? [
-    { name: 'commonName', value: 'localhost' },
-  ];
   const commonName =
-    selfsignedAttrs.find(
+    options.selfsignedAttrs?.find(
       (attr) => attr.name === 'commonName' || attr.shortName === 'CN',
     )?.value ?? 'localhost';
   const selfsignedOptions = {
@@ -94,7 +91,10 @@ export const resolveHttpsConfig = async (
     }
   }
 
-  const pem = await selfsigned.generate(selfsignedAttrs, selfsignedOptions);
+  const pem = await selfsigned.generate(
+    options.selfsignedAttrs ?? [{ name: 'commonName', value: 'localhost' }],
+    selfsignedOptions,
+  );
 
   const content = pem.private + pem.cert;
 
