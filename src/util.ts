@@ -11,12 +11,7 @@ type HttpsConfig = ServerConfig['https'];
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function ensureDir(dir: string) {
-  try {
-    await fs.promises.access(dir);
-  } catch {
-    await ensureDir(path.dirname(dir));
-    await fs.promises.mkdir(dir);
-  }
+  await fs.promises.mkdir(dir, { recursive: true });
 }
 
 function isCertValid(content: string) {
