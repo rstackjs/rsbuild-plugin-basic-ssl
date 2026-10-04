@@ -47,6 +47,7 @@ export const resolveHttpsConfig = async (
   );
 
   const selfsignedOptions = {
+    algorithm: 'sha256',
     keySize: 2048,
     notAfterDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     ...options.selfsignedOptions,
