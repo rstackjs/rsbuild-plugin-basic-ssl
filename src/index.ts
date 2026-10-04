@@ -1,3 +1,4 @@
+import path from 'node:path';
 import type { RsbuildPlugin } from '@rsbuild/core';
 import type { SelfsignedOptions, generate } from 'selfsigned';
 import { resolveHttpsConfig } from './util.js';
@@ -12,7 +13,7 @@ export type PluginBasicSslOptions = {
   filename?: string;
   /**
    * Output path of the generated certificate
-   * @default __dirname
+   * @default '<project>/node_modules/.cache/basic-ssl'
    */
   outputPath?: string;
   /**
@@ -31,10 +32,11 @@ export const pluginBasicSsl = (
   name: PLUGIN_BASIC_SSL_NAME,
   setup(api) {
     api.modifyRsbuildConfig(async (config) => {
-      const httpsConfig = await resolveHttpsConfig(
-        config.server?.https,
-        options,
-      );
+      const httpsConfig = await resolveHttpsConfig(config.server?.https, {
+        ...options,
+        outputPath:
+          options.outputPath ?? path.join(api.context.cachePath, 'basic-ssl'),
+      });
 
       config.server = {
         ...config.server,
