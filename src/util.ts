@@ -70,7 +70,7 @@ export const resolveHttpsConfig = async (
 
   const content = pem.private + pem.cert;
 
-  await ensureDir(options.outputPath);
+  await ensureDir(options.outputPath || '.');
 
   await fs.promises.writeFile(certPath, content, { encoding: 'utf-8' });
 

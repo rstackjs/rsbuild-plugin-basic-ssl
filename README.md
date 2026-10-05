@@ -53,7 +53,7 @@ pluginBasicSsl({
 Output path of the generated certificate.
 
 - **Type:** `string`
-- **Default:** `__dirname`
+- **Default:** `<project>/node_modules/.cache/basic-ssl`
 - **Example:**
 
 ```ts
