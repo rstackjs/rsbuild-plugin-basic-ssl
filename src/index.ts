@@ -38,7 +38,10 @@ export const pluginBasicSsl = (
 
       config.server = {
         ...config.server,
-        https: httpsConfig,
+        https: {
+          ...config.server?.https,
+          ...httpsConfig,
+        },
       };
     });
   },
