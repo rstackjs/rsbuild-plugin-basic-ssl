@@ -7,12 +7,7 @@ import type { PluginBasicSslOptions } from './index.js';
 type HttpsConfig = ServerConfig['https'];
 
 async function ensureDir(dir: string) {
-  try {
-    await fs.promises.access(dir);
-  } catch {
-    await ensureDir(path.dirname(dir));
-    await fs.promises.mkdir(dir);
-  }
+  await fs.promises.mkdir(dir, { recursive: true });
 }
 
 function isCertValid(content: string) {
