@@ -1,13 +1,10 @@
 import { X509Certificate } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import type { ServerConfig } from '@rsbuild/core';
 import type { PluginBasicSslOptions } from './index.js';
 
 type HttpsConfig = ServerConfig['https'];
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function ensureDir(dir: string) {
   try {
@@ -29,7 +26,7 @@ function isCertValid(content: string) {
 
 export const resolveHttpsConfig = async (
   config: HttpsConfig,
-  options: PluginBasicSslOptions,
+  options: PluginBasicSslOptions & { outputPath: string },
 ): Promise<{
   key: NonNullable<HttpsConfig>['key'];
   cert: NonNullable<HttpsConfig>['cert'];
@@ -41,7 +38,7 @@ export const resolveHttpsConfig = async (
   }
 
   const certPath = path.join(
-    options.outputPath ?? __dirname,
+    options.outputPath,
     options.filename ?? 'fake-cert.pem',
   );
 
@@ -74,9 +71,7 @@ export const resolveHttpsConfig = async (
 
   const content = pem.private + pem.cert;
 
-  if (options.outputPath) {
-    await ensureDir(options.outputPath);
-  }
+  await ensureDir(options.outputPath || '.');
 
   await fs.promises.writeFile(certPath, content, { encoding: 'utf-8' });
 
