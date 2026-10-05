@@ -92,6 +92,7 @@ Options passing to `selfsigned`, see [selfsigned - Options](https://github.com/j
 
 ```ts
 const defaultOptions = {
+  algorithm: 'sha256',
   notAfterDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   keySize: 2048,
 };
